@@ -14,7 +14,7 @@
 - [x] Xây dựng giao diện quản trị để thêm, sửa và đổi trạng thái công việc.
 - [x] Viết kiểm thử Vitest cho logic lọc, phân quyền và các thủ tục dữ liệu chính.
 - [x] Kiểm tra giao diện ở desktop và mobile, bao gồm khả năng truy cập cơ bản.
-- [ ] Đồng bộ toàn bộ thay đổi hoàn thiện lên repo GitHub đã chọn.
+- [x] Đồng bộ toàn bộ thay đổi hoàn thiện lên repo GitHub đã chọn.
 - [x] Áp dụng nguyên vẹn token HR Design System cho màu indigo, deep navy, surface, hairline, bán kính, spacing và hierarchy typography Inter.
 - [x] Xây dựng gradient mesh đặc trưng ở khu vực marketing theo dải cream, lemon, lavender, indigo và ruby; không dùng ruby hoặc magenta làm nút hành động.
 - [x] Áp dụng Inter 300 cùng tracking âm cho display, `ss01` toàn cục và `tnum` cho mọi dữ liệu số về công việc.
