@@ -1,0 +1,58 @@
+# Project TODO
+
+- [x] Định nghĩa token màu, kiểu chữ, khoảng cách và chi tiết hình học theo brand system; duy trì cấu trúc mở rộng khi chưa có asset hoặc tài liệu nguồn.
+- [x] Thiết kế schema cho công việc, tùy chọn nhận tin, mức độ quan tâm và tin nhắn cộng đồng.
+- [x] Tạo migration cơ sở dữ liệu và các hàm truy vấn bảo toàn phân quyền.
+- [x] Tạo API cho danh sách và lọc công việc công khai theo lĩnh vực cùng trạng thái công bố.
+- [x] Tạo API quản trị để admin thêm, chỉnh sửa và quản lý trạng thái công việc.
+- [x] Tạo API để người dùng đã đăng nhập lưu email nhận tin và lĩnh vực tìm việc.
+- [x] Tạo API để người dùng đã đăng nhập lưu và cập nhật mức độ quan tâm cho từng công việc.
+- [x] Tạo API chat cộng đồng chung có lưu tin nhắn và kiểm soát người gửi đã đăng nhập.
+- [ ] Tích hợp luồng gửi email có điều kiện khi admin công bố việc làm mới phù hợp và khi người dùng thay đổi tùy chọn nhận tin.
+- [x] Xây dựng giao diện responsive cho danh sách việc làm, bộ lọc, lưu quan tâm và form đăng ký nhận tin.
+- [x] Xây dựng giao diện chat cộng đồng, các trạng thái rỗng, tải và lỗi.
+- [x] Xây dựng giao diện quản trị để thêm, sửa và đổi trạng thái công việc.
+- [x] Viết kiểm thử Vitest cho logic lọc, phân quyền và các thủ tục dữ liệu chính.
+- [x] Kiểm tra giao diện ở desktop và mobile, bao gồm khả năng truy cập cơ bản.
+- [ ] Đồng bộ toàn bộ thay đổi hoàn thiện lên repo GitHub đã chọn.
+- [x] Áp dụng nguyên vẹn token HR Design System cho màu indigo, deep navy, surface, hairline, bán kính, spacing và hierarchy typography Inter.
+- [x] Xây dựng gradient mesh đặc trưng ở khu vực marketing theo dải cream, lemon, lavender, indigo và ruby; không dùng ruby hoặc magenta làm nút hành động.
+- [x] Áp dụng Inter 300 cùng tracking âm cho display, `ss01` toàn cục và `tnum` cho mọi dữ liệu số về công việc.
+- [x] Dùng dark-app shell deep navy cho các khu vực quản trị, đồng thời duy trì hierarchy CTA pill indigo theo HR Design System.
+- [x] Hoàn thiện map token CSS cho toàn bộ color, spacing, radius và typography scale của HR Design System; thay thế giá trị thiết kế hardcode còn lại.
+- [x] Bổ sung trạng thái lỗi và hành động phục hồi rõ ràng cho truy vấn chat cộng đồng.
+- [x] Mở rộng Vitest cho luồng tạo và công bố công việc, lưu thành công tuỳ chọn nhận tin, cùng mức độ quan tâm.
+- [x] Kiểm tra thêm mobile cho khu vực quản trị và xác nhận thao tác bàn phím, focus visible, nhãn biểu mẫu cơ bản.
+- [ ] Rà soát và thay thế các giá trị thiết kế hardcode còn lại bằng token HR Design System trên toàn bộ stylesheet.
+- [x] Bổ sung Vitest cho luồng chuyển trạng thái công việc từ bản nháp hoặc tạm dừng sang đã công bố và kiểm tra hàng đợi thông báo.
+- [x] Kiểm tra accessibility của biểu mẫu quản trị ở mobile và desktop, gồm thứ tự Tab, focus visible và liên kết label/field; lưu lại bằng chứng.
+- [ ] Thu thập và lưu an toàn thông số SMTP hoặc API của hạ tầng email hiện có.
+- [ ] Tích hợp bộ gửi thư theo cấu hình hạ tầng email đã cung cấp, bao gồm email việc làm phù hợp và xác nhận cập nhật tuỳ chọn.
+- [ ] Kiểm thử cấu hình email và ghi nhận trạng thái gửi trong email dispatch log.
+- [x] Xác minh quyền gửi email của Google hiện có và chọn tích hợp Gmail API OAuth hoặc SMTP với app password.
+- [ ] Cấu hình bí mật Google phù hợp và kiểm thử gửi email giao dịch từ Jobase.
+- [ ] Tạo OAuth client loại Web application, bật Gmail API và cấu hình redirect URI cho Jobase.
+- [ ] Lưu an toàn Google OAuth client ID, client secret, refresh token và địa chỉ Gmail gửi thư.
+- [ ] Triển khai và kiểm thử Gmail API `messages.send` cho email công việc phù hợp và email xác nhận tuỳ chọn.
+- [x] Chẩn đoán cấu hình OAuth consent screen, đối tượng người dùng, test users và Redirect URI khiến Google từ chối đăng nhập.
+- [ ] Thu thập mã lỗi sau khi chọn Gmail và xử lý cấu hình OAuth hoặc callback tương ứng.
+- [x] Tạo OAuth client Web application mới trong Google Cloud và thay thế toàn bộ client credentials cũ đã bị xoá.
+- [ ] Kiểm tra callback OAuth, trạng thái mã hoá refresh token và phản hồi giao diện sau khi đăng nhập Gmail.
+- [ ] Khắc phục hoặc cung cấp luồng thay thế cho trang cảnh báo Google OAuth không hiển thị trong trình duyệt hiện tại.
+- [x] Hoàn thiện tài liệu bàn giao Gmail OAuth, bao gồm cấu hình Google Cloud, cấp quyền và kiểm tra trạng thái kết nối.
+- [x] Thêm Vitest bao phủ cả draft→published và paused→published, đồng thời xác nhận email dispatch được xếp hàng tương ứng.
+- [x] Thực hiện và lưu bằng chứng accessibility đầy đủ cho form quản trị trên desktop và mobile: tab sequence end-to-end, focus visible cho mọi control, và label liên kết đúng field.
+- [x] Thêm Vitest bao phủ cả draft→published và paused→published, đồng thời xác nhận email dispatch được xếp hàng tương ứng.
+- [x] Thực hiện và lưu bằng chứng accessibility đầy đủ cho form quản trị trên desktop và mobile: tab sequence end-to-end, focus visible cho mọi control, và label liên kết đúng field.
+- [x] Thực hiện kiểm tra end-to-end tab order cho toàn bộ form quản trị trên desktop và lưu bằng chứng từng chặng focus.
+- [x] Xác minh focus-visible cho mọi control tương tác của form quản trị, gồm link, input, select, textarea và button.
+- [x] Kiểm tra thứ tự focus/điều hướng cùng liên kết label-field của form quản trị trong ngữ cảnh mobile.
+- [x] Thực hiện kiểm tra end-to-end tab order cho toàn bộ form quản trị trên desktop và lưu bằng chứng từng chặng focus.
+- [x] Xác minh focus-visible cho mọi control tương tác của form quản trị, gồm link, input, select, textarea và button.
+- [x] Kiểm tra thứ tự focus/điều hướng cùng liên kết label-field của form quản trị trong ngữ cảnh mobile.
+- [x] Thực hiện keyboard traversal thật trên desktop từ liên kết đầu tiên đến nút tạo công việc và lưu từng chặng focus.
+- [x] Kiểm chứng trực tiếp focus-visible cho link, input, select, textarea và button bằng thao tác bàn phím.
+- [x] Kiểm tra riêng ngữ cảnh mobile admin về thứ tự điều hướng/focus và mapping label-field bằng bằng chứng browser hoặc DOM có thể kiểm chứng.
+- [ ] Thực hiện Tab traversal thật end-to-end trên desktop từ link đầu tiên qua mọi control đến nút Tạo công việc, lưu bằng chứng từng bước.
+- [ ] Đo trực tiếp `:focus-visible` cho link, select, input, textarea và button ngay sau thao tác bàn phím.
+- [ ] Chạy kiểm tra mobile-specific cho form quản trị: focus/navigation order và label-field mapping bằng browser hoặc DOM audit ở viewport mobile.
