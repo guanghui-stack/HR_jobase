@@ -1,7 +1,9 @@
 import { createCipheriv, createDecipheriv, createHash, createHmac, randomBytes, timingSafeEqual } from "crypto";
 import {
   getGmailOAuthCredential,
+  listQueuedEmailDispatches,
   listMatchingEmailRecipients,
+  updateEmailDispatchById,
   updateEmailDispatchStatus,
   upsertGmailOAuthCredential,
 } from "./db";
@@ -119,6 +121,7 @@ export async function exchangeGmailAuthorizationCode(code: string) {
     scope: token.scope || GMAIL_SCOPE,
     senderEmail: required("GMAIL_SENDER_EMAIL"),
   });
+  await flushQueuedEmailDispatches();
 }
 
 export async function isGmailConnected() {
@@ -151,6 +154,31 @@ export async function sendGmailMessage(input: { to: string; subject: string; bod
     throw new Error(payload.error?.message || "Gmail did not accept the message");
   }
   return true;
+}
+
+export async function flushQueuedEmailDispatches() {
+  if (!(await isGmailConnected())) return;
+  const dispatches = await listQueuedEmailDispatches();
+  await Promise.all(dispatches.map(async dispatch => {
+    try {
+      if (dispatch.kind === "job_match" && dispatch.jobTitle && dispatch.company && dispatch.field && dispatch.location && dispatch.workMode) {
+        await sendGmailMessage({
+          to: dispatch.recipient,
+          subject: `Jobase · ${dispatch.jobTitle} có thể phù hợp với bạn`,
+          body: `Chào bạn,\n\nJobase vừa công bố một vai trò mới trong lĩnh vực ${dispatch.field}:\n\n${dispatch.jobTitle} tại ${dispatch.company}\n${dispatch.location} · ${dispatch.workMode}\n\nBạn có thể vào Jobase để xem thêm thông tin và đánh dấu mức độ quan tâm.\n\nJobase`,
+        });
+      } else {
+        await sendGmailMessage({
+          to: dispatch.recipient,
+          subject: "Jobase · Xác nhận tuỳ chọn nhận tin",
+          body: "Chào bạn,\n\nJobase đã ghi nhận tuỳ chọn nhận tin của bạn. Bạn có thể thay đổi tuỳ chọn bất cứ lúc nào trong Jobase.\n\nJobase",
+        });
+      }
+      await updateEmailDispatchById(dispatch.id, "sent");
+    } catch (error) {
+      await updateEmailDispatchById(dispatch.id, "failed", error instanceof Error ? error.message : "Unknown Gmail error");
+    }
+  }));
 }
 
 export async function deliverJobMatchNotifications(job: { id: number; title: string; company: string; field: string; location: string; workMode: string }) {

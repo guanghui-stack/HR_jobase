@@ -1,4 +1,4 @@
-import { and, desc, eq } from "drizzle-orm";
+import { and, asc, desc, eq } from "drizzle-orm";
 import { drizzle } from "drizzle-orm/mysql2";
 import {
   communityMessages,
@@ -240,6 +240,35 @@ export async function updateEmailDispatchStatus(input: {
   ];
   if (input.jobId !== undefined) conditions.push(eq(emailDispatches.jobId, input.jobId));
   await db.update(emailDispatches).set({ status: input.status, errorMessage: input.errorMessage ?? null }).where(and(...conditions));
+}
+
+export async function listQueuedEmailDispatches(limit = 100) {
+  const db = await getDb();
+  if (!db) return [];
+  return db
+    .select({
+      id: emailDispatches.id,
+      userId: emailDispatches.userId,
+      jobId: emailDispatches.jobId,
+      kind: emailDispatches.kind,
+      recipient: emailDispatches.recipient,
+      jobTitle: jobs.title,
+      company: jobs.company,
+      field: jobs.field,
+      location: jobs.location,
+      workMode: jobs.workMode,
+    })
+    .from(emailDispatches)
+    .leftJoin(jobs, eq(emailDispatches.jobId, jobs.id))
+    .where(eq(emailDispatches.status, "queued"))
+    .orderBy(asc(emailDispatches.createdAt))
+    .limit(limit);
+}
+
+export async function updateEmailDispatchById(id: number, status: "sent" | "failed", errorMessage?: string | null) {
+  const db = await getDb();
+  if (!db) return;
+  await db.update(emailDispatches).set({ status, errorMessage: errorMessage ?? null }).where(eq(emailDispatches.id, id));
 }
 
 export async function listMatchingEmailRecipients(field: string) {

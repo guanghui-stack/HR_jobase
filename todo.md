@@ -56,3 +56,9 @@
 - [ ] Thực hiện Tab traversal thật end-to-end trên desktop từ link đầu tiên qua mọi control đến nút Tạo công việc, lưu bằng chứng từng bước.
 - [ ] Đo trực tiếp `:focus-visible` cho link, select, input, textarea và button ngay sau thao tác bàn phím.
 - [ ] Chạy kiểm tra mobile-specific cho form quản trị: focus/navigation order và label-field mapping bằng browser hoặc DOM audit ở viewport mobile.
+- [ ] Bổ sung Vitest cho URL cấp quyền và xác thực chữ ký trạng thái OAuth Gmail, không cần gọi Gmail thật.
+- [x] Bổ sung Vitest cho URL cấp quyền và xác thực chữ ký trạng thái OAuth Gmail, không cần gọi Gmail thật.
+- [ ] Gửi lại các email dispatch đang chờ sau khi Gmail OAuth được kết nối để không bỏ sót công việc đã công bố trước thời điểm cấp quyền.
+- [ ] Bổ sung Vitest cô lập xác nhận email dispatch còn chờ được gửi và cập nhật trạng thái sau kết nối Gmail.
+- [x] Gửi lại các email dispatch đang chờ sau khi Gmail OAuth được kết nối để không bỏ sót công việc đã công bố trước thời điểm cấp quyền.
+- [x] Bổ sung Vitest cô lập xác nhận email dispatch còn chờ được gửi và cập nhật trạng thái sau kết nối Gmail.
