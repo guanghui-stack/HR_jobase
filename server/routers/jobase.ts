@@ -17,6 +17,7 @@ import {
   upsertJobPreference,
 } from "../db";
 import { deliverJobMatchNotifications, deliverPreferenceConfirmation, isGmailConnected } from "../gmail";
+import { publishCommunityMessage } from "../ably";
 import { protectedProcedure, publicProcedure, router } from "../_core/trpc";
 
 const adminProcedure = protectedProcedure.use(({ ctx, next }) => {
@@ -127,6 +128,12 @@ export const jobaseRouter = {
       .input(z.object({ content: z.string().trim().min(1).max(1000) }))
       .mutation(async ({ ctx, input }) => {
         await createCommunityMessage(ctx.user.id, input.content);
+        await publishCommunityMessage({
+          userId: ctx.user.id,
+          userName: ctx.user.name || "Thành viên Jobase",
+          content: input.content,
+          createdAt: new Date().toISOString(),
+        });
         return { success: true } as const;
       }),
   }),
