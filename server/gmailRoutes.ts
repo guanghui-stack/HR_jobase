@@ -1,5 +1,5 @@
 import type { Express, Request, Response } from "express";
-import { createContextFromToken } from "./_core/context.supabase";
+import { createContextFromToken } from "./_core/context";
 import { createGmailAuthorizationUrl, exchangeGmailAuthorizationCode, verifyGmailOAuthState } from "./gmail";
 
 async function requireAdmin(req: Request, res: Response) {

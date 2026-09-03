@@ -21,7 +21,22 @@ let _db: ReturnType<typeof drizzle> | null = null;
 export function getDbPg() {
   if (!_db && process.env.DATABASE_URL) {
     try {
-      _db = drizzle(postgres(process.env.DATABASE_URL));
+      const url = process.env.DATABASE_URL;
+      // Transaction pooler cua Supabase (port 6543) chay pgbouncer o transaction
+      // mode -> KHONG ho tro prepared statements. postgres-js mac dinh bat
+      // prepare, se loi "prepared statement ... already exists" sau vai request.
+      const isTransactionPooler = url.includes(":6543");
+
+      _db = drizzle(
+        postgres(url, {
+          prepare: !isTransactionPooler,
+          // Moi lan goi serverless la mot instance rieng: giu pool that nho de
+          // khong dot het connection slot cua Supabase khi Vercel scale ra.
+          max: 1,
+          idle_timeout: 20,
+          connect_timeout: 10,
+        })
+      );
     } catch (error) {
       console.warn("[Database] Failed to connect:", error);
       _db = null;
