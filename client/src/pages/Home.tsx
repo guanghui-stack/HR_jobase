@@ -75,6 +75,38 @@ export default function Home() {
   const communityQuery = trpc.community.list.useQuery({ limit: 50 }, { enabled: isAuthenticated, refetchInterval: 15000 });
 
   useEffect(() => {
+    // Realtime qua Ably: co tin moi la refetch ngay, khong doi poll 15s.
+    // Chua co VITE_ABLY_API_KEY thi bo qua, poll cu van chay.
+    if (!isAuthenticated) return;
+    const apiKey = import.meta.env.VITE_ABLY_API_KEY as string | undefined;
+    if (!apiKey) return;
+    let closed = false;
+    let client: { close: () => void } | null = null;
+    (async () => {
+      try {
+        const Ably = await import("ably");
+        if (closed) return;
+        const realtime = new Ably.Realtime({ key: apiKey });
+        client = realtime;
+        const channel = realtime.channels.get("jobase:community");
+        await channel.subscribe("message", () => {
+          utils.community.list.invalidate();
+        });
+      } catch (error) {
+        console.warn("[Ably] subscribe failed, giu polling:", error);
+      }
+    })();
+    return () => {
+      closed = true;
+      try {
+        client?.close();
+      } catch {
+        // bo qua loi dong ket noi
+      }
+    };
+  }, [isAuthenticated, utils]);
+
+  useEffect(() => {
     const preference = preferencesQuery.data;
     if (!preference) return;
     setContactEmail(preference.contactEmail);

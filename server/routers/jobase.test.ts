@@ -28,10 +28,11 @@ function createContext(role: "user" | "admin" = "user"): TrpcContext {
   return {
     user: {
       id: 17,
+      supabaseId: "jobase-test-supabase-id",
       openId: "jobase-test-user",
       name: "Jobase Tester",
       email: "tester@example.com",
-      loginMethod: "manus",
+      loginMethod: "supabase",
       role,
       createdAt: new Date(),
       updatedAt: new Date(),
