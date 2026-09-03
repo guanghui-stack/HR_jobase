@@ -7,7 +7,7 @@ const requiredConfig = [
   "GMAIL_SENDER_EMAIL",
 ] as const;
 
-describe("Gmail OAuth configuration", () => {
+describe.skipIf(!process.env.GMAIL_LIVE_TEST)("Gmail OAuth configuration", () => {
   it("is accepted by the Google token endpoint before a real authorization code is supplied", async () => {
     for (const key of requiredConfig) {
       expect(process.env[key], `${key} must be configured`).toBeTruthy();

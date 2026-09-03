@@ -4,7 +4,7 @@ import axios, { type AxiosInstance } from "axios";
 import { parse as parseCookieHeader } from "cookie";
 import type { Request } from "express";
 import { SignJWT, jwtVerify } from "jose";
-import type { User } from "../../drizzle/schema";
+import type { User } from "../../drizzle/schema.pg";
 import * as db from "../db";
 import { ENV } from "./env";
 import type {
@@ -334,6 +334,7 @@ function buildCronUser(
   const now = new Date();
   return {
     id: -1,
+    supabaseId: null,
     openId: userInfo.openId,
     name: userInfo.name || "Manus Scheduled Task",
     email: null,

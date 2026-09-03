@@ -1,7 +1,7 @@
 import type { CreateExpressContextOptions } from "@trpc/server/adapters/express";
 import type { User } from "../../drizzle/schema.pg";
 import { provisionUserFromSupabase } from "../db.pg";
-import { supabaseAdmin } from "./supabase";
+import { supabaseAdmin } from "../supabase";
 
 export type TrpcContext = {
   req?: CreateExpressContextOptions["req"];
