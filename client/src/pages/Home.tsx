@@ -1,5 +1,6 @@
 import { useAuth } from "@/_core/hooks/useAuth";
 import { startLogin } from "@/const";
+import { supabase } from "@/lib/supabase";
 import { trpc } from "@/lib/trpc";
 import {
   ArrowUpRight,
@@ -55,6 +56,17 @@ function AppMark() {
   );
 }
 
+/** Header Authorization cho Ably authUrl — server can Supabase JWT de cap token. */
+async function buildAuthHeaders(): Promise<Record<string, string>> {
+  try {
+    const { data } = await supabase.auth.getSession();
+    const token = data.session?.access_token;
+    return token ? { Authorization: `Bearer ${token}` } : {};
+  } catch {
+    return {};
+  }
+}
+
 function formatDate(value: Date | string | null) {
   if (!value) return "Mới công bố";
   return new Intl.DateTimeFormat("vi-VN", { day: "2-digit", month: "short", year: "numeric" }).format(new Date(value));
@@ -76,17 +88,21 @@ export default function Home() {
 
   useEffect(() => {
     // Realtime qua Ably: co tin moi la refetch ngay, khong doi poll 15s.
-    // Chua co VITE_ABLY_API_KEY thi bo qua, poll cu van chay.
+    // Token auth — API key chi nam tren server (/api/ably/token). Neu server
+    // chua cau hinh ABLY_API_KEY, endpoint tra 503 va poll 15s cu van chay.
     if (!isAuthenticated) return;
-    const apiKey = import.meta.env.VITE_ABLY_API_KEY as string | undefined;
-    if (!apiKey) return;
     let closed = false;
     let client: { close: () => void } | null = null;
     (async () => {
       try {
         const Ably = await import("ably");
         if (closed) return;
-        const realtime = new Ably.Realtime({ key: apiKey });
+        const realtime = new Ably.Realtime({
+          authUrl: "/api/ably/token",
+          authMethod: "GET",
+          // Supabase JWT de server biet ai dang xin token.
+          authHeaders: await buildAuthHeaders(),
+        });
         client = realtime;
         const channel = realtime.channels.get("jobase:community");
         await channel.subscribe("message", () => {

@@ -1,7 +1,7 @@
 // Publish realtime qua Ably REST (khong can giu socket tren server).
 // Neu chua cau hinh ABLY_API_KEY thi bo qua — client van poll 15s nhu cu.
 
-const CHANNEL = "jobase:community";
+export const COMMUNITY_CHANNEL = "jobase:community";
 
 export type CommunityBroadcast = {
   userId: number;
@@ -14,7 +14,7 @@ export async function publishCommunityMessage(message: CommunityBroadcast): Prom
   const key = process.env.ABLY_API_KEY;
   if (!key) return;
   try {
-    const response = await fetch(`https://rest.ably.io/channels/${encodeURIComponent(CHANNEL)}/messages`, {
+    const response = await fetch(`https://rest.ably.io/channels/${encodeURIComponent(COMMUNITY_CHANNEL)}/messages`, {
       method: "POST",
       headers: {
         Authorization: `Basic ${Buffer.from(key).toString("base64")}`,

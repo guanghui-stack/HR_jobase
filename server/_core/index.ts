@@ -3,6 +3,7 @@ import express, { type Express } from "express";
 import { createServer } from "http";
 import net from "net";
 import { createExpressMiddleware } from "@trpc/server/adapters/express";
+import { registerAblyRoutes } from "../ablyRoutes";
 import { registerGmailOAuthRoutes } from "../gmailRoutes";
 import { registerStorageProxy } from "./storageProxy";
 import { appRouter } from "../routers";
@@ -37,6 +38,7 @@ export function buildApp(): Express {
   app.get("/api/health", (_req, res) => res.json({ ok: true }));
   registerStorageProxy(app);
   registerGmailOAuthRoutes(app);
+  registerAblyRoutes(app);
   // tRPC API
   app.use(
     "/api/trpc",
