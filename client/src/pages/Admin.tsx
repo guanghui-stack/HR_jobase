@@ -1,6 +1,7 @@
 import { useAuth } from "@/_core/hooks/useAuth";
 import { startLogin } from "@/const";
 import { trpc } from "@/lib/trpc";
+import { supabase } from "@/lib/supabase";
 import { ArrowLeft, Check, LayoutDashboard, Link2, MailCheck, Plus, Save, ShieldCheck } from "lucide-react";
 import { FormEvent, useEffect, useState } from "react";
 import { Link } from "wouter";
@@ -42,6 +43,16 @@ export default function Admin() {
   const { user, loading, isAuthenticated } = useAuth();
   const [editor, setEditor] = useState<EditorState>(EMPTY_JOB);
   const utils = trpc.useUtils();
+  const [gmailHref, setGmailHref] = useState("/api/gmail/oauth/authorize");
+  useEffect(() => {
+    // Link dieu huong trinh duyet khong gan duoc Authorization header,
+    // nen kem access token vao query de server verify quyen admin.
+    supabase.auth.getSession().then(({ data }) => {
+      if (data.session?.access_token) {
+        setGmailHref(`/api/gmail/oauth/authorize?token=${data.session.access_token}`);
+      }
+    });
+  }, []);
   const jobsQuery = trpc.jobs.listAdmin.useQuery(undefined, { enabled: isAuthenticated && user?.role === "admin" });
   const gmailStatusQuery = trpc.gmail.status.useQuery(undefined, { enabled: isAuthenticated && user?.role === "admin" });
 
@@ -101,7 +112,7 @@ export default function Admin() {
     <header className="admin-header"><div className="container admin-header-inner"><Link className="admin-back" href="/"><ArrowLeft size={16} /> Xem trang công khai</Link><div className="admin-brand"><LayoutDashboard size={17} /> JOBBASE / ADMIN</div><span className="admin-user"><ShieldCheck size={15} /> {user.name || "Quản trị viên"}</span></div></header>
     <main className="container admin-main">
       <div className="admin-intro"><div><p className="eyebrow"><ShieldCheck size={14} /> Quản lý nội dung</p><h1>Giữ nhịp công việc rõ ràng.</h1></div><p>Tạo vai trò mới, chỉnh sửa thông tin và quyết định khi nào một cơ hội được xuất bản đến cộng đồng Jobase.</p></div>
-      <div className={gmailStatusQuery.data?.connected ? "gmail-banner is-connected" : "gmail-banner"}><span>{gmailStatusQuery.data?.connected ? <MailCheck size={17} /> : <Link2 size={17} />}</span><div><strong>{gmailStatusQuery.data?.connected ? "Gmail đã sẵn sàng gửi thông báo" : "Kết nối Gmail để tự động gửi thông báo"}</strong><p>{gmailStatusQuery.data?.connected ? "Công việc mới phù hợp và thay đổi tuỳ chọn sẽ được gửi từ hộp thư đã cấp quyền." : "Chỉ cần một lần cấp quyền bằng tài khoản Gmail dùng để gửi email Jobase."}</p></div>{!gmailStatusQuery.data?.connected && <a className="button-primary" href="/api/gmail/oauth/authorize">Kết nối Gmail</a>}</div>
+      <div className={gmailStatusQuery.data?.connected ? "gmail-banner is-connected" : "gmail-banner"}><span>{gmailStatusQuery.data?.connected ? <MailCheck size={17} /> : <Link2 size={17} />}</span><div><strong>{gmailStatusQuery.data?.connected ? "Gmail đã sẵn sàng gửi thông báo" : "Kết nối Gmail để tự động gửi thông báo"}</strong><p>{gmailStatusQuery.data?.connected ? "Công việc mới phù hợp và thay đổi tuỳ chọn sẽ được gửi từ hộp thư đã cấp quyền." : "Chỉ cần một lần cấp quyền bằng tài khoản Gmail dùng để gửi email Jobase."}</p></div>{!gmailStatusQuery.data?.connected && <a className="button-primary" href={gmailHref}>Kết nối Gmail</a>}</div>
       <div className="admin-grid">
         <form className="admin-editor" onSubmit={handleSubmit}>
           <div className="editor-heading"><div><span className="admin-kicker">{editor.id ? "Chỉnh sửa công việc" : "Công việc mới"}</span><h2>{editor.id ? editor.title || "Cập nhật vai trò" : "Soạn một cơ hội mới"}</h2></div>{editor.id && <button type="button" className="text-link" onClick={() => setEditor(EMPTY_JOB)}>Tạo mới</button>}</div>

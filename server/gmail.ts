@@ -28,14 +28,14 @@ function required(name: "GMAIL_OAUTH_CLIENT_ID" | "GMAIL_OAUTH_CLIENT_SECRET" | 
 }
 
 function encryptionKey() {
-  const secret = process.env.JWT_SECRET;
-  if (!secret) throw new Error("JWT_SECRET is not configured");
+  const secret = process.env.GMAIL_TOKEN_ENCRYPTION_KEY ?? process.env.JWT_SECRET;
+  if (!secret) throw new Error("GMAIL_TOKEN_ENCRYPTION_KEY is not configured");
   return createHash("sha256").update(secret).digest();
 }
 
 function stateSignature(payload: string) {
-  const secret = process.env.JWT_SECRET;
-  if (!secret) throw new Error("JWT_SECRET is not configured");
+  const secret = process.env.GMAIL_TOKEN_ENCRYPTION_KEY ?? process.env.JWT_SECRET;
+  if (!secret) throw new Error("GMAIL_TOKEN_ENCRYPTION_KEY is not configured");
   return createHmac("sha256", secret).update(payload).digest("base64url");
 }
 
